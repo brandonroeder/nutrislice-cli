@@ -362,7 +362,13 @@ Finding your district:
     elif args.tomorrow:
         dates = [today + timedelta(days=1)]
     elif args.week:
-        monday = today - timedelta(days=today.weekday())
+        # On weekends (Sat=5, Sun=6), show next week instead of the past week
+        if today.weekday() >= 5:
+            # Calculate next Monday
+            days_until_monday = 7 - today.weekday()
+            monday = today + timedelta(days=days_until_monday)
+        else:
+            monday = today - timedelta(days=today.weekday())
         dates = [monday + timedelta(days=i) for i in range(5)]
     else:
         dates = [today]
